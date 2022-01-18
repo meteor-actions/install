@@ -1,5 +1,10 @@
 name: Install
 description: Installs Meteor and npm dependencies
+inputs:
+  executable_version:
+    description: 'Meteor version for the `meteor` executable. If set to `local` or not explicitly set, the `meteor` executable will have the version specified in .meteor/release (this may not work with alpha and beta builds). You can use `latest` as an alias for the latest Meteor release.'
+    required: true
+    default: 'local'
 runs:
   using: composite
   steps:
@@ -7,25 +12,36 @@ runs:
       run: echo "$HOME/.meteor" >> $GITHUB_PATH
       shell: bash
 
-    - name: Set env.METEOR_RELEASE 📻
-      run: echo "METEOR_RELEASE=$(cat .meteor/release | cut -d@ -f2)" >> $GITHUB_ENV
+    - name: Set env.METEOR_LOCAL_RELEASE 📻
+      run: echo "METEOR_LOCAL_RELEASE=$(cat .meteor/release | cut -d@ -f2)" >> $GITHUB_ENV
       shell: bash
 
-    - name: Cache ~/.meteor (Meteor ${{ env.METEOR_RELEASE }}) 💿
+    - name: Set env.METEOR_EXECUTABLE_VERSION 📺
+      run: |
+        if [ ${{ inputs.executable_version }} = 'local' ]; then
+          echo "METEOR_EXECUTABLE_VERSION=${{ env.METEOR_LOCAL_RELEASE }}" >> $GITHUB_ENV
+        elif [ ${{ inputs.executable_version }} = 'latest' ]; then
+          echo "METEOR_EXECUTABLE_VERSION=$(curl -s https://install.meteor.com | sed -n 's/^RELEASE="\(.*\)"$/\1/p')" >> $GITHUB_ENV
+        else
+          echo "METEOR_EXECUTABLE_VERSION=${{ inputs.executable_version }}" >> $GITHUB_ENV
+        fi
+      shell: bash
+
+    - name: Cache ~/.meteor (Meteor ${{ env.METEOR_EXECUTABLE_VERSION }} (.meteor/release is ${{ env.METEOR_LOCAL_RELEASE }})) 💿
       uses: actions/cache@v2
       id: cache-meteor
       env:
         cache-name: cache-meteor
       with:
         path: ~/.meteor
-        key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.METEOR_EXECUTABLE_VERSION }}-${{ hashFiles('.meteor/release') }}-${{ hashFiles('.meteor/versions') }}
         restore-keys: |
-          ${{ runner.os }}-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-${{ hashFiles('.meteor/release') }}-
-          ${{ runner.os }}-${{ env.cache-name }}-${{ env.METEOR_RELEASE }}-
+          ${{ runner.os }}-${{ env.cache-name }}-${{ env.METEOR_EXECUTABLE_VERSION }}-${{ hashFiles('.meteor/release') }}-
+          ${{ runner.os }}-${{ env.cache-name }}-${{ env.METEOR_EXECUTABLE_VERSION }}-
 
-    - name: Install Meteor ${{ env.METEOR_RELEASE }} ☄️
+    - name: Install Meteor ${{ env.METEOR_EXECUTABLE_VERSION }} ☄️
       if: steps.cache-meteor.outputs.cache-hit != 'true'
-      run: curl https://install.meteor.com?release=${{ env.METEOR_RELEASE }} | sh
+      run: curl https://install.meteor.com?release=${{ env.METEOR_EXECUTABLE_VERSION }} | sh
       shell: bash
 
     - name: Cache ~/.npm 📀

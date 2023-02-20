@@ -28,7 +28,7 @@ runs:
       shell: bash
 
     - name: Cache ~/.meteor (Meteor ${{ env.METEOR_EXECUTABLE_VERSION }} (.meteor/release is ${{ env.METEOR_LOCAL_RELEASE }})) 💿
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: cache-meteor
       env:
         cache-name: cache-meteor
@@ -45,7 +45,7 @@ runs:
       shell: bash
 
     - name: Cache ~/.npm 📀
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       env:
         cache-name: cache-npm
       with:
@@ -56,7 +56,7 @@ runs:
           ${{ runner.os }}-
 
     - name: Cache ./node_modules 💽
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: cache-node-modules
       env:
         cache-name: cache-node-modules

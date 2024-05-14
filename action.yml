@@ -5,6 +5,10 @@ inputs:
     description: 'Meteor version for the `meteor` executable. If set to `local` or not explicitly set, the `meteor` executable will have the version specified in .meteor/release (this may not work with alpha and beta builds). You can use `latest` as an alias for the latest Meteor release.'
     required: true
     default: 'local'
+outputs:
+  ran-npm-install-hooks:
+    description: "Whether npm install hooks were run."
+    value: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
 runs:
   using: composite
   steps:

@@ -1,0 +1,45 @@
+name: ci:test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  test:
+    name: Continuous integration (test)
+
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+        meteor-version:
+          - local
+        test:
+          - test/example-projects/meteor-2.13.3
+
+    runs-on: ${{ matrix.platform }}
+
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install 💾
+        uses: ./
+        with:
+          working-directory: ${{ matrix.test }}
+          executable_version: ${{ matrix.meteor-version }}
+
+      - name: Test 🧪
+        working-directory: ${{ matrix.test }}
+        run: |
+          meteor npm start | grep '^done$'

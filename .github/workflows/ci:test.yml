@@ -22,6 +22,10 @@ jobs:
           - ubuntu-latest
         meteor-version:
           - local
+          - latest
+          - '2.14'
+          - '2.15'
+          - '2.16'
         test:
           - test/example-projects/meteor-2.13.3
 

@@ -43,7 +43,35 @@ jobs:
           working-directory: ${{ matrix.test }}
           executable_version: ${{ matrix.meteor-version }}
 
-      - name: Test 🧪
+      - name: Test (preinstall) 🧪
+        run: |
+          test -f "${RUNNER_TEMP}/preinstall"
+
+      - name: Test (install) 🧪
+        run: |
+          test -f "${RUNNER_TEMP}/install"
+
+      - name: Test (postinstall) 🧪
+        run: |
+          test -f "${RUNNER_TEMP}/postinstall"
+
+      - name: Test (prepublish) 🧪
+        run: |
+          test -f "${RUNNER_TEMP}/prepublish"
+
+      - name: Test (preprepare) 🧪
+        run: |
+          ! test -f "${RUNNER_TEMP}/preprepare"
+
+      - name: Test (prepare) 🧪
+        run: |
+          test -f "${RUNNER_TEMP}/prepare"
+
+      - name: Test (postprepare) 🧪
+        run: |
+          ! test -f "${RUNNER_TEMP}/postprepare"
+
+      - name: Test (start) 🧪
         working-directory: ${{ matrix.test }}
         run: |
           meteor npm start | grep '^done$'

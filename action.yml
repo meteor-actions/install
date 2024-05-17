@@ -12,18 +12,19 @@ runs:
   using: composite
   steps:
     - name: Set $PATH 🪜
-      run: echo "$HOME/.meteor" >> $GITHUB_PATH
       shell: bash
+      run: echo "$HOME/.meteor" >> $GITHUB_PATH
 
     - name: Set env.METEOR_RELEASE_PATH 🥾
-      run: echo "METEOR_RELEASE_PATH=${{ inputs.working-directory }}/.meteor/release" >> $GITHUB_ENV
       shell: bash
+      run: echo "METEOR_RELEASE_PATH=${{ inputs.working-directory }}/.meteor/release" >> $GITHUB_ENV
 
     - name: Set env.METEOR_LOCAL_RELEASE 📻
-      run: echo "METEOR_LOCAL_RELEASE=$(sed -n 's/^METEOR@\([0-9][0-9]*.*\)$/\1/p' ${{ env.METEOR_RELEASE_PATH }})" >> $GITHUB_ENV
       shell: bash
+      run: echo "METEOR_LOCAL_RELEASE=$(sed -n 's/^METEOR@\([0-9][0-9]*.*\)$/\1/p' ${{ env.METEOR_RELEASE_PATH }})" >> $GITHUB_ENV
 
     - name: Set env.METEOR_EXECUTABLE_VERSION 📺
+      shell: bash
       run: |
         if [ ${{ inputs.executable_version }} = 'local' ]; then
           echo "METEOR_EXECUTABLE_VERSION=${{ env.METEOR_LOCAL_RELEASE }}" >> $GITHUB_ENV
@@ -32,7 +33,6 @@ runs:
         else
           echo "METEOR_EXECUTABLE_VERSION=${{ inputs.executable_version }}" >> $GITHUB_ENV
         fi
-      shell: bash
 
     - name: Cache ~/.meteor (Meteor ${{ env.METEOR_EXECUTABLE_VERSION }} (${{ env.METEOR_RELEASE_PATH }} is ${{ env.METEOR_LOCAL_RELEASE }})) 💿
       uses: actions/cache@v4
@@ -48,8 +48,9 @@ runs:
 
     - name: Install Meteor ${{ env.METEOR_EXECUTABLE_VERSION }} ☄️
       if: steps.cache-meteor.outputs.cache-hit != 'true'
-      run: curl https://install.meteor.com?release=${{ env.METEOR_EXECUTABLE_VERSION }} | sh
       shell: bash
+      run: |
+        curl https://install.meteor.com?release=${{ env.METEOR_EXECUTABLE_VERSION }} | sh
 
     - name: Cache ~/.npm 📀
       uses: actions/cache@v4
@@ -96,7 +97,7 @@ runs:
     - name: Install dependencies (meteor npm clean-install) 📦
       if: steps.diff.outcome == 'failure'
       working-directory: ${{ inputs.working-directory }}
+      shell: bash
       run: |
         cp "${RUNNER_TEMP}/package-lock.json" package-lock.json
         meteor npm clean-install
-      shell: bash

@@ -10,7 +10,7 @@ jobs:
 
 ## `inputs`
 
-### `executable_version` (default `local`)
+### `executable_version` (default: `local`)
 
 Meteor version for the `meteor` executable. See description in
 [`action.yml`](action.yml).

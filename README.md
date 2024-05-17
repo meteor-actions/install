@@ -14,3 +14,7 @@ jobs:
 
 Meteor version for the `meteor` executable. See description in
 [`action.yml`](action.yml).
+
+### `working-directory` (default: `.`)
+
+The working directory to run the installation in.

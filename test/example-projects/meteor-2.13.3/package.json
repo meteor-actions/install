@@ -12,6 +12,6 @@
     "start": "meteor node index.mjs"
   },
   "dependencies": {
-    "date-fns": "^3.6.0"
+    "date-fns": "3.6.0"
   }
 }

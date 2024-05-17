@@ -1,7 +1,7 @@
 name: Install
 description: Installs Meteor and npm dependencies
 inputs:
-  executable_version:
+  executable-version:
     description: 'Meteor version for the `meteor` executable. If set to `local` or not explicitly set, the `meteor` executable will have the version specified in .meteor/release (this may not work with alpha and beta builds). You can use `latest` as an alias for the latest Meteor release.'
     required: true
     default: 'local'
@@ -26,12 +26,12 @@ runs:
     - name: Set env.METEOR_EXECUTABLE_VERSION 📺
       shell: bash
       run: |
-        if [ ${{ inputs.executable_version }} = 'local' ]; then
+        if [ ${{ inputs.executable-version }} = 'local' ]; then
           echo "METEOR_EXECUTABLE_VERSION=${{ env.METEOR_LOCAL_RELEASE }}" >> $GITHUB_ENV
-        elif [ ${{ inputs.executable_version }} = 'latest' ]; then
+        elif [ ${{ inputs.executable-version }} = 'latest' ]; then
           echo "METEOR_EXECUTABLE_VERSION=$(curl -s https://install.meteor.com | sed -n 's/^RELEASE="\(.*\)"$/\1/p')" >> $GITHUB_ENV
         else
-          echo "METEOR_EXECUTABLE_VERSION=${{ inputs.executable_version }}" >> $GITHUB_ENV
+          echo "METEOR_EXECUTABLE_VERSION=${{ inputs.executable-version }}" >> $GITHUB_ENV
         fi
 
     - name: Cache ~/.meteor (Meteor ${{ env.METEOR_EXECUTABLE_VERSION }} (${{ env.METEOR_RELEASE_PATH }} is ${{ env.METEOR_LOCAL_RELEASE }})) 💿

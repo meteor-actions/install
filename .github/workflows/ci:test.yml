@@ -42,7 +42,7 @@ jobs:
         uses: ./
         with:
           working-directory: ${{ matrix.test }}
-          executable_version: ${{ matrix.meteor-version }}
+          executable-version: ${{ matrix.meteor-version }}
 
       - name: Test (preinstall) 🧪
         run: |

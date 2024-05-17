@@ -28,6 +28,7 @@ jobs:
           - '2.16'
         test:
           - test/example-projects/meteor-2.13.3
+          - test/example-projects/package-lock-update
 
     runs-on: ${{ matrix.platform }}
 

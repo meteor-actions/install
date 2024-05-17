@@ -1,0 +1,17 @@
+{
+  "name": "package-lock-update",
+  "version": "1.0.0",
+  "scripts": {
+    "preinstall": "bash -c 'touch \"${RUNNER_TEMP}\"/preinstall'",
+    "install": "bash -c 'touch \"${RUNNER_TEMP}\"/install'",
+    "postinstall": "bash -c 'touch \"${RUNNER_TEMP}\"/postinstall'",
+    "prepublish": "bash -c 'touch \"${RUNNER_TEMP}\"/prepublish'",
+    "preprepare": "bash -c 'touch \"${RUNNER_TEMP}\"/preprepare'",
+    "prepare": "bash -c 'touch \"${RUNNER_TEMP}\"/prepare'",
+    "postprepare": "bash -c 'touch \"${RUNNER_TEMP}\"/postprepare'",
+    "start": "meteor node index.mjs"
+  },
+  "dependencies": {
+    "date-fns": "^3.5.0"
+  }
+}
